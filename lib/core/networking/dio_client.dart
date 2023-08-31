@@ -8,15 +8,15 @@ import 'package:flutter/foundation.dart';
 import 'package:pretty_dio_logger/pretty_dio_logger.dart';
 
 class DioClient {
-  late Dio dioClient;
+  late Dio dio;
 
   static DioClient? _instance;
 
   DioClient._({Dio? client}){
     if(client != null) {
-      dioClient = client;
+      dio = client;
     }else {
-      dioClient = getDio();
+      dio = getDio();
     }
   }
 
@@ -24,8 +24,8 @@ class DioClient {
 
   Future<dynamic> get(String url, {dynamic parameters, String? token}) async {
     try {
-      Response response = await dioClient.get(url, queryParameters: parameters);
-      return _response(response);
+      Response response = await dio.get(url, queryParameters: parameters);
+      return responseDecode(response);
     } on DioException catch (e) {
       throwError(e);
     }
@@ -33,8 +33,8 @@ class DioClient {
 
   Future<dynamic> post(String url, {dynamic parameters, dynamic body, String? token}) async {
     try {
-      Response response = await dioClient.post(url, queryParameters: parameters, data: body);
-      return _response(response);
+      Response response = await dio.post(url, queryParameters: parameters, data: body);
+      return responseDecode(response);
     } on DioException catch (e) {
       throwError(e);
     }
@@ -42,8 +42,8 @@ class DioClient {
 
   Future<dynamic> patch(String url, {dynamic parameters, dynamic body, String? token}) async {
     try {
-      Response response = await dioClient.patch(url, queryParameters: parameters, data: body);
-      return _response(response);
+      Response response = await dio.patch(url, queryParameters: parameters, data: body);
+      return responseDecode(response);
     } on DioException catch (e) {
       throwError(e);
     }
@@ -51,8 +51,8 @@ class DioClient {
 
   Future<dynamic> upload(String url, {dynamic body, String? token}) async {
     try {
-      Response response = await dioClient.post(url, data: FormData.fromMap(body));
-      return _response(response);
+      Response response = await dio.post(url, data: FormData.fromMap(body));
+      return responseDecode(response);
     } on DioException catch (e) {
       throwError(e);
     }
@@ -61,7 +61,7 @@ class DioClient {
   static Dio getDio({String? token, String? baseUrl}) {
     Dio _dio = Dio(BaseOptions(
       baseUrl: baseUrl ?? '',
-      headers: {'Authorization': token},
+      headers: {'Authorization': 'Bearer $token'},
       contentType: "application/json",
       connectTimeout: const Duration(milliseconds: 150000),
       receiveTimeout: const Duration(milliseconds: 150000),
@@ -88,7 +88,7 @@ class DioClient {
     return _dio;
   }
 
-  dynamic _response(Response response) {
+  static dynamic responseDecode(Response response) {
     try {
       var responseJson = json.decode(response.toString());
       switch (response.statusCode) {

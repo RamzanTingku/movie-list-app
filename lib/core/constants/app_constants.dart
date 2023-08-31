@@ -1,0 +1,3 @@
+class AppConstants{
+  static const API_TOKEN = "eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI1ZWY2N2U1Y2MyZGRlNWI5MGMwMTJkNWViYjkzZGZjNyIsInN1YiI6IjVlNzNiZjI3MzU3YzAwMDAxNjRiM2U4NSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.LqLcWL-PaAgE6NQeaDfw38kQOnGFMCoDutf1ZtlvKek";
+}
