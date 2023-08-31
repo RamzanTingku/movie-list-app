@@ -25,7 +25,7 @@ class MainApp extends StatelessWidget {
           BlocProvider(
             create: (context) => MovieGenreBloc(
               context.read<MovieApiDataRepository>(),
-            ),
+            )..add(const LoadMovieGenreEvent()),
           ),
         ],
         child: MaterialApp(
@@ -33,7 +33,7 @@ class MainApp extends StatelessWidget {
           theme: ThemeData(
             primaryColor: Colors.white,
           ),
-          home: MovieList(),
+          home: const MovieList(),
         ),
       ),
     );

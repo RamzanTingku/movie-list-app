@@ -26,7 +26,7 @@ class MovieApiDataRepository{
   }
 
 
-  Future<List<MovieData>> getMovieList(String genreId, int page) async {
+  Future<List<MovieData>> getMovieList(String? genreId, int page) async {
     try {
       final response = await _dio.get(Urls.movieDiscoverList,
           queryParameters: {"with_genres":genreId, "page":page});
