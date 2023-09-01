@@ -13,9 +13,9 @@ class MovieGenreLoadingState extends MovieGenreState {
 
 class MovieGenreLoadedState extends MovieGenreState {
   final List<Genres> genres;
-  int selectedGenre;
-  List<MovieData>? movies;
-  MovieGenreLoadedState(this.genres, { this.movies, this.selectedGenre = 0});
+  final int? selectedGenreId;
+  final List<MovieData>? movies;
+  MovieGenreLoadedState(this.genres, { this.movies, this.selectedGenreId});
 
   @override
   List<Object?> get props => [genres];

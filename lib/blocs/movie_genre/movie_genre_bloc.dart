@@ -40,28 +40,27 @@ class MovieGenreBloc extends Bloc<MovieGenreEvent, MovieGenreState> {
     if(list.isEmpty) {
       emit(MovieGenreEmptyState());
     }else{
-      emit(MovieGenreLoadedState(list, selectedGenre: 2));
+      emit(MovieGenreLoadedState(list));
+      await _loadMovies(emit, null, 1);
     }
   }
 
   Future<void> _onSelectMovieGenre(SelectMovieGenreEvent event, Emitter<MovieGenreState> emit) async {
-    if(state is MovieGenreLoadedState){
-      final state = this.state as MovieGenreLoadedState;
-      state.selectedGenre = event.selectedMovieGenre;
-      await _getMovies(emit, state, 1);
-      emit(state);
-      //emit(MovieGenreLoadedState(state.genres/*, selectedGenre: event.selectedMovieGenre, movies: const []*/));
-    }
+    await _loadMovies(emit, event.selectedMovieGenreId, 1);
   }
 
-  Future<void> _getMovies(Emitter<MovieGenreState> emit, MovieGenreLoadedState? state, int page) async {
-    final list = await _apiRepository.getMovieList(state?.genres[state.selectedGenre].id?.toString(), page);
-    state?.movies = list;
-    final loadedState = state;
-    if(list.isNotEmpty) {
-      emit(loadedState as MovieGenreLoadedState);
-    }else{
-      emit(MovieGenreEmptyState());
+  Future<void> _loadMovies(Emitter<MovieGenreState> emit, int? genreId, int page) async {
+    if(state is MovieGenreLoadedState){
+      final state = this.state as MovieGenreLoadedState;
+      final genres = state.genres;
+      genreId ??= genres.first.id;
+      emit(MovieGenreLoadingState());
+      final list = await _apiRepository.getMovieList(genreId.toString(), page);
+      if(list.isNotEmpty) {
+        emit(MovieGenreLoadedState(genres, movies: list, selectedGenreId: genreId));
+      }else{
+        emit(MovieGenreEmptyState());
+      }
     }
   }
 }

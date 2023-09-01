@@ -37,16 +37,42 @@ class MovieList extends StatelessWidget {
                 return loadGenreItem(context, state, index);
               }),
         ),
+        const SizedBox(height: 16),
+        Expanded(
+          child: ListView.builder(
+              itemCount: state.movies?.length,
+              padding: const EdgeInsets.all(16),
+              itemBuilder: (context, index) {
+                return Container(
+                  margin: const EdgeInsets.only(bottom: 8),
+                  padding: const EdgeInsets.all(8),
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
+                      color: Colors.white, border: Border.all(color: Colors.grey, width: 1)
+                  ),
+                  child: Column(
+                    children: [
+                      Text(state.movies?[index].title ?? '', style: const TextStyle(color: Colors.black)),
+                      const SizedBox(height: 4),
+                      Text(state.movies?[index].voteCount?.toString() ?? '', style: const TextStyle(color: Colors.black)),
+                      const SizedBox(height: 4),
+                      Text(state.movies?[index].releaseDate ?? '', style: const TextStyle(color: Colors.black)),
+                      const SizedBox(height: 4),
+                    ],
+                  ),
+                );
+              }),
+        ),
       ],
     );
   }
 
   Widget loadGenreItem(BuildContext context, MovieGenreLoadedState state,
       int index) {
-    bool selected = state.selectedGenre == index;
+    bool selected = state.selectedGenreId == state.genres[index].id;
     return GestureDetector(
       onTap: () {
-        context.read<MovieGenreBloc>().add(SelectMovieGenreEvent(index));
+        context.read<MovieGenreBloc>().add(SelectMovieGenreEvent(state.genres[index].id));
       },
       child: Container(
         alignment: Alignment.center,

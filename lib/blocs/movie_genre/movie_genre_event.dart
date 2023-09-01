@@ -15,8 +15,8 @@ class LoadMovieGenreEvent extends MovieGenreEvent {
 }
 
 class SelectMovieGenreEvent extends MovieGenreEvent {
-  final int selectedMovieGenre;
-  const SelectMovieGenreEvent(this.selectedMovieGenre);
+  final int? selectedMovieGenreId;
+  const SelectMovieGenreEvent(this.selectedMovieGenreId);
 
   @override
   List<Object> get props => [];
